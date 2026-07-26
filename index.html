@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arkhos AI — Sistemas de IA que vendem, atendem e organizam</title>
+  <meta name="description" content="A Arkhos AI cria agentes e automações de IA que vendem pelo WhatsApp, atendem clientes e organizam operações — sem você precisar estar online o tempo todo." />
+
+  <!-- Open Graph (link bonito no WhatsApp / Instagram) -->
+  <meta property="og:title" content="Arkhos AI — Automação e Agentes de IA" />
+  <meta property="og:description" content="Sistemas de IA que vendem, atendem e organizam. Veja o caso real do MariAssist." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0A0E1A" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Figtree: substituta web da fonte do Julio — ver brand/BRAND-WEB.md §2 -->
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;800&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ═══ Tokens — amostrados da entrega do Julio (brand/BRAND-WEB.md) ═══ */
+    :root {
+      --bg:        #0A0E1A;
+      --bg-glow:   #121F47;
+      --bg-void:   #010103;
+      --blue:      #3163F5;
+      --blue-lt:   #789BF6;
+      --blue-deep: #0A5CE5;
+      --green:     #48D17D;
+      --ink:       #FFFFFF;
+      --ink-2:     #C9D4E5;
+      --ink-3:     #91A0B5;
+      --line:      rgba(49, 99, 245, 0.22);
+      --line-soft: rgba(255, 255, 255, 0.08);
+      --card:      rgba(255, 255, 255, 0.03);
+      --logo:      url('brand/logo/arkhos-logo-white.png');
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.12; }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+    /* ═══ Fundo: luz azul entrando pelo topo ═══ */
+    .bg-glow {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 45% at 22% 0%, rgba(49, 99, 245, 0.28) 0%, transparent 62%),
+        radial-gradient(ellipse 50% 40% at 85% 8%, rgba(18, 31, 71, 0.85) 0%, transparent 60%);
+    }
+
+    /* ═══ Swoosh / logo fantasma — a assinatura da marca ═══ */
+    .ghost {
+      position: absolute; pointer-events: none; z-index: 0;
+      background: var(--blue);
+      -webkit-mask-image: var(--logo); mask-image: var(--logo);
+      -webkit-mask-size: contain;      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;  mask-repeat: no-repeat;
+      -webkit-mask-position: center;   mask-position: center;
+    }
+    /* hero: gigante, sangrando pelo topo-esquerdo */
+    .ghost-hero {
+      width: 900px; height: 790px; top: -290px; left: -280px;
+      opacity: 0.30; filter: blur(1px);
+    }
+    /* caso: sangrando pela direita, mais discreto */
+    .ghost-case {
+      width: 620px; height: 545px; bottom: -190px; right: -230px;
+      opacity: 0.07;
+    }
+    /* cta final: fantasma branco atrás do bloco azul */
+    .ghost-cta {
+      width: 520px; height: 457px; top: -140px; right: -150px;
+      background: #FFFFFF; opacity: 0.09;
+    }
+
+    /* ═══ Nav ═══ */
+    nav {
+      position: relative; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 0;
+    }
+    /* pílula de marca: logo + Arkhos AI dentro de vidro (BRAND.md §1) */
+    .brand {
+      display: inline-flex; align-items: center; gap: 11px;
+      padding: 8px 18px 8px 12px; border-radius: 999px;
+      border: 1px solid var(--line-soft);
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(10px);
+    }
+    .brand img { width: 26px; height: 23px; object-fit: contain; display: block; }
+    .brand-name { font-size: 17px; font-weight: 800; letter-spacing: 0.01em; }
+    .brand-name span { color: var(--blue); }
+    nav .nav-cta {
+      font-size: 14px; font-weight: 600; color: var(--ink);
+      text-decoration: none; padding: 10px 20px; border-radius: 999px;
+      border: 1px solid var(--line); transition: 0.2s;
+    }
+    nav .nav-cta:hover { background: var(--blue); border-color: var(--blue); }
+
+    /* ═══ Pílula outline (elemento do Julio) ═══ */
+    .pill {
+      display: inline-block; font-size: 12px; font-weight: 800;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue-lt);
+      padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px;
+      background: rgba(49, 99, 245, 0.06);
+    }
+
+    /* ═══ Hero ═══ */
+    .hero { position: relative; z-index: 1; padding: 76px 0 88px; text-align: center; }
+    .hero h1 {
+      font-size: clamp(38px, 6.4vw, 66px);
+      margin: 26px auto 24px; max-width: 15ch;
+    }
+    /* destaque = palavra em azul, mesma fonte e peso (BRAND-WEB.md §2) */
+    .hl { color: var(--blue); }
+    .hero p.lead {
+      font-size: clamp(16px, 2.2vw, 20px); color: var(--ink-3); font-weight: 300;
+      max-width: 640px; margin: 0 auto 38px;
+    }
+
+    /* ═══ Botões ═══ */
+    .btn-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 16px; font-weight: 800; text-decoration: none;
+      padding: 16px 32px; border-radius: 999px; transition: 0.22s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+      color: var(--ink); box-shadow: 0 12px 34px rgba(49, 99, 245, 0.42);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 46px rgba(49, 99, 245, 0.58); }
+    .btn-ghost { color: var(--ink); border: 1px solid var(--line); }
+    .btn-ghost:hover { background: rgba(49, 99, 245, 0.08); border-color: var(--blue); }
+    /* seta em círculo (CTA do Julio) */
+    .btn .arrow {
+      width: 24px; height: 24px; border-radius: 50%; flex: 0 0 auto;
+      background: rgba(255, 255, 255, 0.16);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 13px; line-height: 1;
+    }
+
+    /* ═══ Seção base ═══ */
+    section.block { position: relative; z-index: 1; padding: 74px 0; }
+    .section-head { text-align: center; margin-bottom: 52px; }
+    .kicker {
+      font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--blue); font-weight: 800; margin-bottom: 16px;
+    }
+    .section-head h2 { font-size: clamp(28px, 4.2vw, 44px); }
+    .section-head p { color: var(--ink-3); max-width: 580px; margin: 16px auto 0; font-weight: 300; }
+
+    /* ═══ Cards de oferta ═══ */
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .card {
+      position: relative; overflow: hidden;
+      background: var(--card); border: 1px solid var(--line-soft); border-radius: 20px;
+      padding: 34px 28px; transition: 0.28s;
+    }
+    /* glow azul difuso sangrando pelo topo do card */
+    .card::before {
+      content: ''; position: absolute; top: -80px; left: -40px;
+      width: 220px; height: 180px; border-radius: 50%;
+      background: rgba(49, 99, 245, 0.20); filter: blur(48px);
+      opacity: 0; transition: 0.28s;
+    }
+    .card:hover { transform: translateY(-5px); border-color: var(--line); }
+    .card:hover::before { opacity: 1; }
+    .card > * { position: relative; z-index: 1; }
+    .card .ico {
+      width: 50px; height: 50px; border-radius: 14px; margin-bottom: 22px;
+      background: rgba(49, 99, 245, 0.12); border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card .ico svg { width: 24px; height: 24px; stroke: var(--blue-lt); fill: none; stroke-width: 1.8; }
+    .card h3 { font-size: 20px; margin-bottom: 12px; }
+    .card p { color: var(--ink-3); font-size: 15px; font-weight: 300; }
+
+    /* ═══ Caso MariAssist ═══ */
+    .case {
+      position: relative; overflow: hidden;
+      background: linear-gradient(150deg, rgba(18, 31, 71, 0.75) 0%, rgba(10, 14, 26, 0.6) 60%);
+      border: 1px solid var(--line); border-radius: 26px; padding: 48px 44px;
+    }
+    .case-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 44px; align-items: center; }
+    .case h3 { font-size: clamp(26px, 3.6vw, 36px); margin: 18px 0 28px; }
+    /* tabela de linhas finas (elemento do Julio) — aqui o "valor" é frase, não número,
+       então o label vira etiqueta em cima e o texto respira embaixo */
+    .rows { border-top: 1px solid var(--line-soft); }
+    .row { padding: 18px 2px; border-bottom: 1px solid var(--line-soft); }
+    .row .lbl {
+      display: block; color: var(--blue-lt); font-size: 11px; font-weight: 800;
+      letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 7px;
+    }
+    .row .val { color: var(--ink-2); font-size: 15px; font-weight: 300; line-height: 1.5; }
+
+    /* ═══ Mockup de conversa (é assim que o Julio mostra o produto) ═══ */
+    .phone {
+      background: #0B1220; border: 1px solid var(--line-soft); border-radius: 26px;
+      padding: 20px 18px; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45), 0 0 60px rgba(49, 99, 245, 0.14);
+    }
+    .phone-head { display: flex; align-items: center; gap: 11px; padding-bottom: 14px; border-bottom: 1px solid var(--line-soft); margin-bottom: 16px; }
+    .phone-av {
+      width: 34px; height: 34px; border-radius: 50%; flex: 0 0 auto;
+      background: linear-gradient(135deg, var(--blue), var(--blue-deep));
+      display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px;
+    }
+    .phone-head b { font-size: 14px; font-weight: 600; display: block; }
+    .phone-head .on { font-size: 12px; color: var(--green); font-weight: 400; }
+    .bub { max-width: 86%; padding: 11px 14px; border-radius: 14px; font-size: 13.5px; font-weight: 300; margin-bottom: 10px; line-height: 1.45; }
+    .bub-them { background: rgba(255, 255, 255, 0.06); border-top-left-radius: 4px; }
+    .bub-us { background: var(--blue); margin-left: auto; border-top-right-radius: 4px; font-weight: 400; }
+    .bub-ok {
+      display: inline-flex; align-items: center; gap: 7px; margin-left: auto;
+      background: rgba(72, 209, 125, 0.12); color: var(--green);
+      border: 1px solid rgba(72, 209, 125, 0.3);
+      padding: 8px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+    }
+    .bub-wrap { display: flex; }
+    .phone-time { text-align: center; font-size: 11px; color: var(--ink-3); margin-top: 14px; opacity: 0.7; }
+
+    /* ═══ Como funciona ═══ */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+    .step { text-align: center; padding: 0 10px; }
+    .step .num {
+      width: 52px; height: 52px; margin: 0 auto 20px; border-radius: 50%;
+      border: 1px solid var(--line); color: var(--blue-lt);
+      background: rgba(49, 99, 245, 0.08);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 19px;
+    }
+    .step h3 { font-size: 19px; margin-bottom: 10px; }
+    .step p { color: var(--ink-3); font-size: 14.5px; font-weight: 300; }
+
+    /* ═══ Quem constrói ═══ */
+    .about {
+      display: flex; gap: 36px; align-items: center;
+      background: var(--card); border: 1px solid var(--line-soft); border-radius: 26px;
+      padding: 44px;
+    }
+    .about-avatar {
+      flex: 0 0 auto; width: 108px; height: 108px; border-radius: 50%; overflow: hidden;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 44px;
+      box-shadow: 0 12px 34px rgba(49, 99, 245, 0.38);
+    }
+    .about-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .about-body h2 { font-size: clamp(23px, 3vw, 32px); margin-bottom: 16px; }
+    .about-body p { color: var(--ink-3); font-weight: 300; font-size: 15.5px; margin-bottom: 12px; }
+    .about-body p:last-child { margin-bottom: 0; }
+    .about-body strong { color: var(--ink); font-weight: 600; }
+
+    /* ═══ Acompanhe ═══ */
+    .social-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 720px; margin: 0 auto; }
+    .social-card {
+      background: var(--card); border: 1px solid var(--line-soft); border-radius: 20px;
+      padding: 32px 28px; text-decoration: none; color: var(--ink);
+      display: flex; flex-direction: column; gap: 7px; transition: 0.28s;
+    }
+    a.social-card:hover { transform: translateY(-5px); border-color: var(--line); background: rgba(49, 99, 245, 0.07); }
+    .social-card .ico {
+      width: 48px; height: 48px; border-radius: 14px; margin-bottom: 12px;
+      background: rgba(49, 99, 245, 0.12); border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .social-card .ico svg { width: 22px; height: 22px; stroke: var(--blue-lt); fill: none; stroke-width: 1.8; }
+    .social-card h3 { font-size: 18px; }
+    .social-card p { color: var(--ink-3); font-size: 14px; font-weight: 300; }
+    .social-card .badge {
+      align-self: flex-start; margin-top: 10px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--blue-lt); font-weight: 800; padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px;
+    }
+    .social-card .link-arrow { margin-top: 10px; font-size: 14px; font-weight: 600; color: var(--blue); }
+
+    /* ═══ CTA final ═══ */
+    .final-cta {
+      position: relative; overflow: hidden; text-align: center;
+      background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue) 100%);
+      border-radius: 30px; padding: 68px 32px; margin-top: 20px;
+    }
+    .final-cta > * { position: relative; z-index: 1; }
+    .final-cta h2 { font-size: clamp(28px, 4.2vw, 42px); margin-bottom: 16px; }
+    .final-cta p { color: rgba(255, 255, 255, 0.82); margin: 0 auto 34px; font-weight: 300; max-width: 500px; }
+    .final-cta .btn-primary { background: var(--ink); color: var(--bg); box-shadow: 0 14px 38px rgba(0, 0, 0, 0.34); }
+    .final-cta .btn-primary:hover { background: #EEF3FF; }
+    .final-cta .btn-primary .arrow { background: rgba(10, 14, 26, 0.12); }
+
+    /* ═══ Footer ═══ */
+    footer { position: relative; z-index: 1; text-align: center; padding: 48px 0 42px; border-top: 1px solid var(--line-soft); margin-top: 74px; }
+    footer p { color: var(--ink-3); font-size: 13px; font-weight: 300; }
+    footer a { color: var(--blue-lt); text-decoration: none; }
+    footer a:hover { color: var(--blue); }
+
+    /* ═══ Responsivo ═══ */
+    @media (max-width: 880px) {
+      .case-inner { grid-template-columns: 1fr; gap: 34px; }
+      .case { padding: 36px 24px; }
+    }
+    @media (max-width: 820px) {
+      .cards, .steps, .social-cards { grid-template-columns: 1fr; }
+      .about { flex-direction: column; text-align: center; padding: 34px 24px; }
+      nav .nav-cta { display: none; }
+      section.block { padding: 52px 0; }
+      .hero { padding: 56px 0 64px; }
+      .section-head { margin-bottom: 38px; }
+      .ghost-hero { width: 620px; height: 545px; top: -200px; left: -230px; opacity: 0.26; }
+      .ghost-case { display: none; }
+    }
+
+    /* ═══ Reveal on scroll ═══ */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <div class="wrap" style="position:relative">
+    <div class="ghost ghost-hero"></div>
+
+    <!-- NAV -->
+    <nav>
+      <div class="brand">
+        <img src="brand/logo/arkhos-logo-white.png" alt="Arkhos AI" />
+        <div class="brand-name">Arkhos <span>AI</span></div>
+      </div>
+      <a class="nav-cta" href="#contato">Falar com a Arkhos</a>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+      <span class="pill">Automação &amp; Agentes de IA</span>
+      <h1>Sistemas de IA que <span class="hl">vendem, atendem e organizam</span> por você</h1>
+      <p class="lead">A Arkhos AI cria agentes e automações sob medida que trabalham no WhatsApp, no estoque e na operação do seu negócio — sem você precisar estar online o tempo todo. Nada de tema pronto: sistemas construídos de verdade, um a um.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="#contato">Quero um sistema assim <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href="#caso">Ver caso real</a>
+      </div>
+    </header>
+  </div>
+
+  <!-- OFERTAS -->
+  <section class="block" id="servicos">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="kicker">O que a Arkhos faz</div>
+        <h2>Sistemas que trabalham todo dia — não um projeto que você usa <span class="hl">uma vez</span></h2>
+        <p>Automações que ficam rodando na sua operação: atendem, produzem e organizam sozinhas, e a gente acompanha para elas só melhorarem com o tempo.</p>
+      </div>
+      <div class="cards">
+        <div class="card reveal">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 17 0z"/></svg>
+          </div>
+          <h3>Atendimento e triagem no WhatsApp</h3>
+          <p>Um agente que responde, qualifica o cliente, consulta estoque e preço em tempo real e fecha o pedido sozinho — 24 horas por dia, sem perder ninguém fora do horário.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M10 9l5 3-5 3z"/></svg>
+          </div>
+          <h3>Fábrica de conteúdo</h3>
+          <p>Produção automática de vídeos e posts: roteiro, narração com voz realista, imagens e publicação. Sua marca presente todo dia, sem depender de inspiração.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+          </div>
+          <h3>Dashboards &amp; relatórios</h3>
+          <p>Painéis e relatórios que se atualizam sozinhos e chegam prontos no seu WhatsApp ou e-mail. Você decide olhando dados, não no escuro.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASO MARIASSIST -->
+  <section class="block" id="caso">
+    <div class="wrap">
+      <div class="case reveal">
+        <div class="ghost ghost-case"></div>
+        <div class="case-inner">
+          <div>
+            <span class="pill">Caso real · Distribuidora Marianna</span>
+            <h3>MariAssist: a vendedora digital que <span class="hl">nunca dorme</span></h3>
+            <div class="rows">
+              <div class="row">
+                <span class="lbl">O problema</span>
+                <span class="val">Pedidos a qualquer hora, consulta manual de estoque e cliente esperando resposta</span>
+              </div>
+              <div class="row">
+                <span class="lbl">O que a Arkhos construiu</span>
+                <span class="val">Agente de IA ligado ao catálogo e ao banco, que monta o pedido e passa pra um humano só quando precisa</span>
+              </div>
+              <div class="row">
+                <span class="lbl">O resultado</span>
+                <span class="val">Atendimento 24/7, padronizado e rastreável, com relatório diário automático</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- mockup de conversa: é assim que a marca mostra o produto -->
+          <div class="phone">
+            <div class="phone-head">
+              <div class="phone-av">A</div>
+              <div>
+                <b>Atendimento Arkhos</b>
+                <span class="on">● online</span>
+              </div>
+            </div>
+            <div class="bub bub-them">Boa noite, queria orçamento de 80 caixas pra quarta.</div>
+            <div class="bub bub-us">Boa noite! Consultando o estoque agora — já te mando o valor fechado.</div>
+            <div class="bub-wrap"><span class="bub-ok">✓ Orçamento enviado</span></div>
+            <div class="phone-time">23:14 · respondido em 40 segundos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUEM CONSTRÓI -->
+  <!-- TODO: quando houver foto do Guilherme, trocar a inicial "G" por <img src="..." alt="Guilherme"> dentro de .about-avatar -->
+  <section class="block" id="sobre">
+    <div class="wrap">
+      <div class="about reveal">
+        <div class="about-avatar">G</div>
+        <div class="about-body">
+          <div class="kicker">Quem constrói</div>
+          <h2>Feito por quem coloca a <span class="hl">mão no código</span></h2>
+          <p>Sou o <strong>Guilherme, fundador da Arkhos AI</strong>, de Uberlândia. Comecei resolvendo um problema real: uma distribuidora que perdia venda porque ninguém dava conta de responder o WhatsApp de madrugada.</p>
+          <p>Desse problema nasceu o <strong>MariAssist</strong> — e é assim que trabalho até hoje: um gargalo de verdade por vez, sistema construído do zero, medido no uso real e não no slide.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section class="block" id="como">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="kicker">Como funciona</div>
+        <h2>Do problema ao sistema rodando em <span class="hl">3 passos</span></h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="num">1</div>
+          <h3>Diagnóstico</h3>
+          <p>A gente conversa, mapeia o gargalo do seu negócio e define o que a IA vai resolver primeiro.</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">2</div>
+          <h3>Construção</h3>
+          <p>A Arkhos monta o sistema sob medida, integrado às ferramentas que você já usa.</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">3</div>
+          <h3>Entrega &amp; ajuste</h3>
+          <p>Você vê funcionando, a gente afina com base no uso real e o sistema fica seu.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTEÚDO / ACOMPANHE -->
+  <!-- TODO: quando o canal do YouTube existir, transformar o card .soon num <a href="URL_DO_CANAL"> e remover o badge "Em breve" -->
+  <section class="block" id="conteudo">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="kicker">Acompanhe</div>
+        <h2>Automação <span class="hl">sem mistério</span></h2>
+        <p>Vou mostrar bastidores, casos reais e o que dá — e o que não dá — pra automatizar num negócio de verdade.</p>
+      </div>
+      <div class="social-cards">
+        <div class="social-card soon reveal">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>
+          </div>
+          <h3>YouTube</h3>
+          <p>Conteúdo em vídeo sobre automação e IA aplicada ao dia a dia de quem tem negócio.</p>
+          <span class="badge">Em breve</span>
+        </div>
+        <a class="social-card reveal" href="https://instagram.com/arkhos.ia" target="_blank" rel="noopener">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+          </div>
+          <h3>Instagram</h3>
+          <p>@arkhos.ia — cases, ideias e bastidores no feed.</p>
+          <span class="link-arrow">Seguir →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="block" id="contato">
+    <div class="wrap">
+      <div class="final-cta reveal">
+        <div class="ghost ghost-cta"></div>
+        <h2>Tem um processo que te consome todo dia?</h2>
+        <p>Me conta qual é. Em uma conversa rápida eu te digo se dá pra automatizar — e como.</p>
+        <!-- TODO WHATSAPP: quando a Arkhos tiver número próprio, trocar o href abaixo por
+             https://wa.me/5534XXXXXXXXX?text=Oi%2C%20vim%20pelo%20site%20da%20Arkhos%20e%20quero%20saber%20mais
+             e o texto do botão por "Falar no WhatsApp".
+             ⚠️ NÃO usar o número da Distribuidora Marianna. -->
+        <a class="btn btn-primary" href="https://instagram.com/arkhos.ia" target="_blank" rel="noopener">Me chamar no Direct <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <p style="margin-bottom:10px">
+        <a href="https://instagram.com/arkhos.ia" target="_blank" rel="noopener">Instagram</a>
+        · <a href="#conteudo">YouTube (em breve)</a>
+      </p>
+      <p>© 2026 Arkhos AI · Automação e Agentes de IA · feito com tecnologia própria</p>
+    </div>
+  </footer>
+
+  <script>
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
